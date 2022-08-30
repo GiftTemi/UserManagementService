@@ -1,11 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Domain.Common;
+using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Entities
 {
-    public class User
+    public class User:AuditEntity
     {
-        [Key]
-        public int Id { get; set; }
         public string? FirstName { get; set; }
         public string? lastName { get; set; }
         public string FullName{ get { return $"{FirstName} {lastName}"; }}

@@ -87,7 +87,7 @@ namespace API.Controllers
         {
           if (_context.Employees == null)
           {
-              return Problem("Entity set 'AppDbContext.Employees'  is null.");
+              return Problem("entity set 'AppDbContext.Employees'  is null.");
           }
             _context.Employees.Add(employee);
             await _context.SaveChangesAsync();

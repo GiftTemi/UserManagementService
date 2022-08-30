@@ -1,8 +1,9 @@
-﻿namespace Domain.Entities
+﻿using Domain.Common;
+
+namespace Domain.Entities
 {
-    public class Employee
+    public class Employee: AuditEntity
     {
-        public int Id { get; set; }
         public string? Organization { get; set; }
         public int UserId { get; set; }
         public User User { get; set; }
