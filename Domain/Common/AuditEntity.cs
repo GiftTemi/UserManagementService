@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Domain.Enums;
 
 namespace Domain.Common
 {
@@ -11,6 +7,7 @@ namespace Domain.Common
         public int Id { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime? DateModified { get; set; }
-        public bool Status { get; set; }
+        public Status  Status { get; set; }
+        public string  StatusDescription { get { return Status.ToString(); } }
     }
 }

@@ -11,4 +11,5 @@ public class AppDbContext : DbContext
     public DbSet<User> Users { get; set; } = default!;
 
     public DbSet<Employee> Employees { get; set; } = default!;
+    public DbSet<Customer> Customers { get; set; } = default!;
 }

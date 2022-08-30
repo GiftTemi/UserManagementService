@@ -22,7 +22,7 @@ namespace API.Controllers
         }
 
         // GET: api/Users
-        [HttpGet]
+        [HttpGet("getallusers")]
         public async Task<ActionResult<Responses>> GetUsers()
         {
             if (_context.Users == null)
@@ -37,7 +37,7 @@ namespace API.Controllers
         }
 
         // GET: api/Users/5
-        [HttpGet("{id}")]
+        [HttpGet("getuserbyid/{id}")]
         public async Task<Responses> GetUser(int id)
         {
             try
@@ -62,7 +62,7 @@ namespace API.Controllers
 
         // POST: api/Users
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
+        [HttpPost("createuser")]
         public async Task<Responses> CreateUser(User user)
         {
             try
@@ -81,7 +81,7 @@ namespace API.Controllers
         // PUT: api/Users/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
 
-        [HttpPut("{id}")]
+        [HttpPut("updateuser/{id}")]
         public async Task<Responses> PostUser(int id, User user)
         {
             try
@@ -125,7 +125,7 @@ namespace API.Controllers
         }
 
         // DELETE: api/Users/5
-        [HttpDelete("{id}")]
+        [HttpDelete("deleteuser/{id}")]
         public async Task<Responses> DeleteUser(int id)
         {
             try
