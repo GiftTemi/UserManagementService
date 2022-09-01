@@ -22,37 +22,17 @@ namespace API.Controllers
         }
 
         // GET: api/Users
-        [HttpGet("getallusers")]
-        public async Task<ActionResult<Responses>> GetUsers()
-        {
-            if (_context.Users == null)
-            {
-                return Responses.Failure("No User Found");
-            }
-            var users = await _context.Users.ToListAsync();
-            if (users != null)
-                return Responses.Success("Users found", users);
-            else
-                return Responses.Failure("There are no users in the database");
-        }
-
-        // GET: api/Users/5
-        [HttpGet("getuserbyid/{id}")]
-        public async Task<Responses> GetUser(int id)
+        [HttpGet]
+        public async Task<Responses> GetUsers()
         {
             try
             {
-                if (_context.Users == null)
+                var findUsers = await _context.Users.ToListAsync();
+                if (findUsers == null)
                 {
-                    return Responses.Failure("There are no users in the database");
-                }                
-                var findUser = _context.Users.Where(p => p.Id == id).FirstOrDefault();
-                if (findUser != null)
-                {
-                    return Responses.Success("User found", findUser);
+                    return Responses.Failure("Users Not found");
                 }
-                else
-                    return Responses.Failure($"User with userid {id} not found");
+                return Responses.Success("Suceeded", findUsers);
             }
             catch (Exception ex)
             {
@@ -60,17 +40,17 @@ namespace API.Controllers
             }
         }
 
-        // POST: api/Users
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost("createuser")]
-        public async Task<Responses> CreateUser(User user)
+        // GET: api/Users/5
+        [HttpGet("{id}")]
+        public async Task<Responses> GetUser(int id)
         {
             try
             {
-                _context.Users.Add(user);
-                await _context.SaveChangesAsync();
-
-                return Responses.Success("User created successfully");
+                var findUser = await _context.Users.Where(q => q.Id == id).FirstOrDefaultAsync();
+                if (findUser == null)
+                    return Responses.Failure($"User with Id {id} not found");
+                else
+                    return Responses.Success("suceeded", findUser);
             }
             catch (Exception ex)
             {
@@ -80,43 +60,43 @@ namespace API.Controllers
 
         // PUT: api/Users/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-
-        [HttpPut("updateuser/{id}")]
-        public async Task<Responses> PostUser(int id, User user)
+        [HttpPut("{id}")]
+        public async Task<Responses> UpdateUser(int id, User user)
         {
             try
             {
-                //Check if the the ids match
-                if (id != user.Id)
-                {
-                    return Responses.Failure("User id does not match the User's Id");
-                }
-                //Checking if there are users in the database
-                if (_context.Users == null)
-                {
-                    return Responses.Failure("There are no users in the database");
-                }
-                //Try to find the user
-                var findUser = _context.Users.Where(p => p.Id == id).FirstOrDefault();
-                #region
-                //Same as above
-                //foreach (var item in _context.Users)
-                //{
-                //    if (item.Id == id)
-                //        findUser = item;
-                //}
-                #endregion
-                //If user exists, Update the user
-                if (findUser != null)
-                {
-                    _context.Users.Update(user);
-                    await _context.SaveChangesAsync();
-                    return Responses.Success("User updated Successfully");
-                }
+                var findUser = await _context.Users.Where(u => u.Id == id).FirstOrDefaultAsync();
+                if (findUser == null)
+                    return Responses.Failure("User not found");
                 else
                 {
-                    return Responses.Failure($"User with Id {id} not found");
+                    findUser.DOB = user.DOB;
+                    findUser.Status = user.Status;
+                    findUser.DateModified = user.DateModified;
+                    findUser.FirstName = user.FirstName;
+                    findUser.lastName = user.lastName;
+
+                    _context.Update(findUser);
+                    await _context.SaveChangesAsync();
+                    return Responses.Success("User updated successfully", findUser);
                 }
+
+            }
+            catch (Exception ex)
+            {
+                return Responses.Failure(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        public async Task<Responses> CreateUser(User user)
+        {
+            try
+            {
+                _context.Users.Add(user);
+                await _context.SaveChangesAsync();
+
+                return Responses.Success("User Created Successfully");
             }
             catch (Exception ex)
             {
@@ -125,27 +105,27 @@ namespace API.Controllers
         }
 
         // DELETE: api/Users/5
-        [HttpDelete("deleteuser/{id}")]
+        [HttpDelete("{id}")]
         public async Task<Responses> DeleteUser(int id)
         {
             try
             {
-                if (_context.Users == null)
-                    return Responses.Failure("No User Found");
-                var findUser = _context.Users.Where(p => p.Id == id).FirstOrDefault();
-                if (findUser != null)
+                var user = await _context.Users.Where(u => u.Id == id).FirstOrDefaultAsync();
+                if (user == null)
                 {
-                    _context.Users.Remove(findUser);
-                    await _context.SaveChangesAsync();
-                    return Responses.Success($"User with id{id} has been deleted");
+                    return Responses.Failure("User not found");
                 }
-                else
-                    return Responses.Failure($"User with Id{id} not found");
+
+                _context.Users.Remove(user);
+                await _context.SaveChangesAsync();
+
+                return Responses.Success("User deleted Successfully");
             }
             catch (Exception ex)
             {
                 return Responses.Failure(ex.Message);
             }
         }
+
     }
 }
